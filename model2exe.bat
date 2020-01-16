@@ -1,6 +1,8 @@
 @setlocal enabledelayedexpansion
-@set GCC=
 
+@set target=%1
+
+@set GCC=
 @set platform=32
 
 @if exist "%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe" (
@@ -32,6 +34,29 @@
 
   @echo ...done
 
+)
+
+@if "%target%" NEQ "" (
+
+  @for %%i in ("%target%") do @(
+    @set targetName=%%~ni
+  )
+
+  "%MOD%" %target% ".\out\!targetName!.c"
+
+  @if not exist ".\out\!targetName!.c" (
+    @exit /b 1
+  )
+
+  "%GCC%" -O3 -I.. -I.\sim -o ".\out\!targetName!.exe" ".\out\!targetName!.c" .\sim\*.c -lm
+
+  @if not exist ".\out\!targetName!.exe" (
+    @exit /b 1
+  )
+
+  @echo Created .\out\!targetName!.exe
+
+  @exit /b 0
 )
 
 @for /f %%M in (".\target\*.model") do @(
