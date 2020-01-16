@@ -39,6 +39,6 @@ Either use the target directory:
 
 or specify your ```.model``` file as an argument to ```model2exe.bat```:
 
-    ``` model2exe.bat <path to .model file> ```
+    model2exe.bat <path to .model file>
 
 In both cases, the resulting executable will be created in the ```out``` folder.
