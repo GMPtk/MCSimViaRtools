@@ -1,5 +1,6 @@
 @setlocal enabledelayedexpansion
 
+@set rootdir=%~dp0
 @set target=%1
 
 @set GCC=
@@ -15,14 +16,14 @@
   @exit /b 1
 )
 
-@set "MOD=.\mod\mod.exe"
+@set "MOD=%rootdir%mod\mod.exe"
 
 @if not exist "%MOD%" (
 
   @echo.
   @echo Building mod...
   
-  "%GCC%" -o %MOD% .\mod\*.c
+  "%GCC%" -o %MOD% %rootdir%mod\*.c
 
   @if %ERRORLEVEL% neq 0 (
     @pause
@@ -46,7 +47,7 @@
     @exit /b 1
   )
 
-  "%GCC%" -O3 -I.. -I.\sim -I.\sim\gsl-2.6 -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" .\sim\*.c -lm -L.\sim\gsl-2.6\.libs -lgsl
+  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
 
   @if not exist "!targetDir!!targetName!.exe" (
     @exit /b 1
@@ -57,18 +58,18 @@
   @exit /b 0
 )
 
-@if not exist ".\out" (
-  mkdir ".\out"
+@if not exist "%rootdir%out" (
+  mkdir "%rootdir%out"
 )
 
-@for /f %%M in (".\target\*.model") do @(
+@for /f %%M in ("%rootdir%target\*.model") do @(
 
   @echo.
   @echo Building sim for %%~nM...
 
-  "%MOD%" %%M ".\out\%%~nM.c"
+  "%MOD%" %%M "%rootdir%out\%%~nM.c"
 
-  @if not exist ".\out\%%~nM.c" (
+  @if not exist "%rootdir%out\%%~nM.c" (
     @echo.
     @echo Failed to generate .c file for %%~nM
     @exit /b 1
@@ -76,9 +77,9 @@
 
   @echo ...compiling...
 
-  "%GCC%" -O3 -I.. -I.\sim -I.\sim\gsl-2.6 -o ".\out\%%~nM.exe" ".\out\%%~nM.c" .\sim\*.c -lm -L.\sim\gsl-2.6\.libs -lgsl
+  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "%rootdir%out\%%~nM.exe" "%rootdir%out\%%~nM.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
 
-  @if not exist ".\out\%%~nM.exe" (
+  @if not exist "%rootdir%out\%%~nM.exe" (
     @echo.
     @echo Failed to compile/link .c file for %%~nM
     @exit /b 1
