@@ -46,7 +46,7 @@
     @exit /b 1
   )
 
-  "%GCC%" -O3 -I.. -I.\sim -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" .\sim\*.c -lm
+  "%GCC%" -O3 -I.. -I.\sim -I.\sim\gsl-2.6 -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" .\sim\*.c -lm -L.\sim\gsl-2.6\.libs -lgsl
 
   @if not exist "!targetDir!!targetName!.exe" (
     @exit /b 1
@@ -76,7 +76,7 @@
 
   @echo ...compiling...
 
-  "%GCC%" -O3 -I.. -I.\sim -o ".\out\%%~nM.exe" ".\out\%%~nM.c" .\sim\*.c -lm
+  "%GCC%" -O3 -I.. -I.\sim -I.\sim\gsl-2.6 -o ".\out\%%~nM.exe" ".\out\%%~nM.c" .\sim\*.c -lm -L.\sim\gsl-2.6\.libs -lgsl
 
   @if not exist ".\out\%%~nM.exe" (
     @echo.
