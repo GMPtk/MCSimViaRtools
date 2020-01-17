@@ -15,9 +15,6 @@
   @exit /b 1
 )
 
-@echo.
-@echo using GCC: %GCC%
-
 @set "MOD=.\mod\mod.exe"
 
 @if not exist "%MOD%" (
@@ -40,23 +37,28 @@
 
   @for %%i in ("%target%") do @(
     @set targetName=%%~ni
+    @set targetDir=%%~dpi
   )
 
-  "%MOD%" %target% ".\out\!targetName!.c"
+  "%MOD%" %target% "!targetDir!!targetName!.c"
 
-  @if not exist ".\out\!targetName!.c" (
+  @if not exist "!targetDir!!targetName!.c" (
     @exit /b 1
   )
 
-  "%GCC%" -O3 -I.. -I.\sim -o ".\out\!targetName!.exe" ".\out\!targetName!.c" .\sim\*.c -lm
+  "%GCC%" -O3 -I.. -I.\sim -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" .\sim\*.c -lm
 
-  @if not exist ".\out\!targetName!.exe" (
+  @if not exist "!targetDir!!targetName!.exe" (
     @exit /b 1
   )
 
-  @echo Created .\out\!targetName!.exe
+  @echo Created !targetDir!!targetName!.exe
 
   @exit /b 0
+)
+
+@if not exist ".\out" (
+  mkdir ".\out"
 )
 
 @for /f %%M in (".\target\*.model") do @(
@@ -82,6 +84,7 @@
     @exit /b 1
   )
 
+  @echo.
   @echo ...done...created %%~nM.exe
 
 )
