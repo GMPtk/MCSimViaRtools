@@ -13,8 +13,6 @@ Warning: written and tested on 64-bit Windows 7 and 10, and using Rtools v3.5 in
 
 * Rename the directory (remove the ```-master``` suffix).
 
-If you are using this tool to generate simulations for RVis, RVis will start in this location when browsing for MCSim simulation executables.
-
 ## Test
 
 Follow these steps to test the build environment using the [butadiene](http://cvs.savannah.gnu.org/viewvc/mcsim/mcsim/examples/butadiene/) example model provided:
