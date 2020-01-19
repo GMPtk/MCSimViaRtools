@@ -9,23 +9,23 @@ Warning: written and tested on 64-bit Windows 7 and 10, and using Rtools v3.5 in
 
 ## Installation
 
-* Download this repo and unzip to ```Documents``` (```My Documents``` on older Windows systems).
+1. Download this repo and unzip to ```Documents``` (```My Documents``` on older Windows systems).
 
-* Rename the directory (remove the ```-master``` suffix).
+2. Rename the directory (remove the ```-master``` suffix).
 
 ## Test
 
 Follow these steps to test the build environment using the [butadiene](http://cvs.savannah.gnu.org/viewvc/mcsim/mcsim/examples/butadiene/) example model provided:
 
-* Start a command prompt and change directory to ```Documents\MCSimViaRtools```.
+1. Start a command prompt and change directory to ```Documents\MCSimViaRtools```.
 
-* Execute the build batch file:
+2. Execute the build batch file:
 
   ``` 
   C:\Users\...\Documents\MCSimViaRtools>model2exe.bat
   ```
 
-* Test the resulting executable:
+3. Test the resulting executable:
 
   ```
   C:\Users\...\Documents\MCSimViaRtools>.\out\butadiene.exe .\target\butadiene.in .\out\butadiene.out
@@ -35,9 +35,9 @@ Follow these steps to test the build environment using the [butadiene](http://cv
 
 Either use the target directory:
 
-* Drop a ```.model``` file into the ```target``` directory.
+1. Drop a ```.model``` file into the ```target``` directory.
 
-* Run ```model2exe.bat```.
+2. Run ```model2exe.bat```.
 
 or specify your ```.model``` file as an argument to ```model2exe.bat```:
 
