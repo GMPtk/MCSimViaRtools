@@ -1,7 +1,7 @@
 @setlocal enabledelayedexpansion
 
 @set rootdir=%~dp0
-@set target=%1
+@set target=%~1
 
 @set GCC=
 @set platform=32
@@ -41,10 +41,18 @@
     @set targetDir=%%~dpi
   )
 
-  "%MOD%" %target% "!targetDir!!targetName!.c"
+  @if exist "!targetDir!!targetName!.c" (
+    @del "!targetDir!!targetName!.c"
+  )
+
+  "%MOD%" "%target%" "!targetDir!!targetName!.c"
 
   @if not exist "!targetDir!!targetName!.c" (
     @exit /b 1
+  )
+
+  @if exist "!targetDir!!targetName!.exe" (
+    @del "!targetDir!!targetName!.exe"
   )
 
   "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
@@ -67,6 +75,10 @@
   @echo.
   @echo Building sim for %%~nM...
 
+  @if exist "%rootdir%out\%%~nM.c" (
+    @del "%rootdir%out\%%~nM.c"
+  )
+
   "%MOD%" %%M "%rootdir%out\%%~nM.c"
 
   @if not exist "%rootdir%out\%%~nM.c" (
@@ -76,6 +88,10 @@
   )
 
   @echo ...compiling...
+
+  @if exist "%rootdir%out\%%~nM.exe" (
+    @del "%rootdir%out\%%~nM.exe"
+  )
 
   "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "%rootdir%out\%%~nM.exe" "%rootdir%out\%%~nM.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
 
