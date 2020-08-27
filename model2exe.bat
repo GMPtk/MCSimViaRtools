@@ -6,8 +6,14 @@
 @set GCC=
 @set platform=32
 
-@if exist "%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe" (
-  @set "GCC=%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe"
+@if exist "%SystemDrive%\rtools40\mingw%platform%\bin\gcc.exe" (
+  @set "GCC=%SystemDrive%\rtools40\mingw%platform%\bin\gcc.exe"
+)
+
+@if "%GCC%" == "" (
+  @if exist "%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe" (
+    @set "GCC=%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe"
+  )
 )
 
 @if "%GCC%" == "" (
