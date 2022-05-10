@@ -1,11 +1,9 @@
 # MCSimViaRtools
-Build [GNU MCSim](https://www.gnu.org/software/mcsim/) models on Windows. Based on code provided by R. Woodrow Setzer.
-
-Warning: written and tested on 64-bit Windows 7 and 10, and using Rtools v3.5 installed in its default location on the system drive; this tool is not guaranteed to work with a different system configuration.
+Build [GNU MCSim](https://www.gnu.org/software/mcsim/) models on Windows.
 
 ## Prerequisites
 
-* [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+* [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (version 3.5, 4.0, or 4.2; installed in default location) 
 
 ## Installation
 

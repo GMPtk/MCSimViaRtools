@@ -4,23 +4,33 @@
 @set target=%~1
 
 @set GCC=
+@set GSL_VER=
 @set platform=32
+
+@if exist "%SystemDrive%\rtools42\x86_64-w64-mingw%platform%.static.posix\bin\gcc.exe" (
+  @set "PATH=%PATH%;%SystemDrive%\rtools42\x86_64-w64-mingw%platform%.static.posix\bin"
+  @set "GCC=gcc.exe"
+  @set "GSL_VER=2.7"
+  goto use_gcc
+)
 
 @if exist "%SystemDrive%\rtools40\mingw%platform%\bin\gcc.exe" (
   @set "GCC=%SystemDrive%\rtools40\mingw%platform%\bin\gcc.exe"
+  @set "GSL_VER=2.6"
+  goto use_gcc
 )
 
-@if "%GCC%" == "" (
-  @if exist "%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe" (
-    @set "GCC=%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe"
-  )
+@if exist "%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe" (
+  @set "GCC=%SystemDrive%\Rtools\mingw_%platform%\bin\gcc.exe"
+  @set "GSL_VER=2.6"
+  goto use_gcc
 )
 
-@if "%GCC%" == "" (
-  @echo.
-  @echo Failed to find compiler in Rtools
-  @exit /b 1
-)
+@echo.
+@echo Failed to find compiler in Rtools
+@exit /b 1
+
+:use_gcc
 
 @set "MOD=%rootdir%mod\mod.exe"
 
@@ -29,7 +39,7 @@
   @echo.
   @echo Building mod...
   
-  "%GCC%" -o %MOD% %rootdir%mod\*.c
+  "%GCC%" -o %MOD% %rootdir%mod\getopt.c %rootdir%mod\lex.c %rootdir%mod\lexerr.c %rootdir%mod\lexfn.c %rootdir%mod\mod.c %rootdir%mod\modd.c %rootdir%mod\modi.c %rootdir%mod\modiSBML.c %rootdir%mod\modiSBML2.c %rootdir%mod\modo.c %rootdir%mod\strutil.c
 
   @if %ERRORLEVEL% neq 0 (
     @pause
@@ -61,7 +71,7 @@
     @del "!targetDir!!targetName!.exe"
   )
 
-  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
+  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-%GSL_VER% -o "!targetDir!!targetName!.exe" "!targetDir!!targetName!.c" %rootdir%sim\delays.c %rootdir%sim\getopt.c %rootdir%sim\lex.c %rootdir%sim\lexerr.c %rootdir%sim\lexfn.c %rootdir%sim\list.c %rootdir%sim\lsodes1.c %rootdir%sim\lsodes2.c %rootdir%sim\matutil.c %rootdir%sim\matutilo.c %rootdir%sim\mh.c %rootdir%sim\modelu.c %rootdir%sim\optdsign.c %rootdir%sim\random.c %rootdir%sim\sim.c %rootdir%sim\simi.c %rootdir%sim\siminit.c %rootdir%sim\simmonte.c %rootdir%sim\simo.c %rootdir%sim\strutil.c %rootdir%sim\yourcode.c -lm -L%rootdir%sim\gsl-%GSL_VER%\.libs -lgsl
 
   @if not exist "!targetDir!!targetName!.exe" (
     @exit /b 1
@@ -81,13 +91,16 @@
   @echo.
   @echo Building sim for %%~nM...
 
-  @if exist "%rootdir%out\%%~nM.c" (
-    @del "%rootdir%out\%%~nM.c"
+  @set "target_c=%rootdir%out\%%~nM.c"
+  @set "target_exe=%rootdir%out\%%~nM.exe"
+
+  @if exist "!target_c!" (
+    @del "!target_c!"
   )
 
-  "%MOD%" %%M "%rootdir%out\%%~nM.c"
+  "%MOD%" "%rootdir%target\%%~nM.model" "!target_c!"
 
-  @if not exist "%rootdir%out\%%~nM.c" (
+  @if not exist "!target_c!" (
     @echo.
     @echo Failed to generate .c file for %%~nM
     @exit /b 1
@@ -95,13 +108,13 @@
 
   @echo ...compiling...
 
-  @if exist "%rootdir%out\%%~nM.exe" (
-    @del "%rootdir%out\%%~nM.exe"
+  @if exist "!target_exe!" (
+    @del "!target_exe!"
   )
 
-  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-2.6 -o "%rootdir%out\%%~nM.exe" "%rootdir%out\%%~nM.c" %rootdir%sim\*.c -lm -L%rootdir%sim\gsl-2.6\.libs -lgsl
+  "%GCC%" -O3 -I%rootdir%sim -I%rootdir%sim\gsl-%GSL_VER% -o "!target_exe!" "!target_c!" %rootdir%sim\delays.c %rootdir%sim\getopt.c %rootdir%sim\lex.c %rootdir%sim\lexerr.c %rootdir%sim\lexfn.c %rootdir%sim\list.c %rootdir%sim\lsodes1.c %rootdir%sim\lsodes2.c %rootdir%sim\matutil.c %rootdir%sim\matutilo.c %rootdir%sim\mh.c %rootdir%sim\modelu.c %rootdir%sim\optdsign.c %rootdir%sim\random.c %rootdir%sim\sim.c %rootdir%sim\simi.c %rootdir%sim\siminit.c %rootdir%sim\simmonte.c %rootdir%sim\simo.c %rootdir%sim\strutil.c %rootdir%sim\yourcode.c -lm -L%rootdir%sim\gsl-%GSL_VER%\.libs -lgsl
 
-  @if not exist "%rootdir%out\%%~nM.exe" (
+  @if not exist "!target_exe!" (
     @echo.
     @echo Failed to compile/link .c file for %%~nM
     @exit /b 1
